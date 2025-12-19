@@ -15,7 +15,9 @@ public class ValidationMsg {
 	public static final String NAME_ERROR = "Name error!";
 	public static final String QUIZ_ID_ERROR = "Quiz id error!";
 	public static final String PHONE_ERROR = "Phone error!";
-
+	public static final String QUESTION_ID_ERROR = "Question error!";
+	public static final String ANSWERVO_IS_EMPTY = "AnswerVO is empty!";
+	
 
 
 }

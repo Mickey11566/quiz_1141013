@@ -11,8 +11,6 @@ import jakarta.validation.constraints.Pattern;
 @Entity
 public class User {
 
-	@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = ValidationMsg.EMAIL_ERROR)
-	@NotBlank(message = ValidationMsg.EMAIL_ERROR)
 	@Column(name = "email")
 	@Id
 	private String email;

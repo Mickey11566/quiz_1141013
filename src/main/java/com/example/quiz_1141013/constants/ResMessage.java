@@ -11,6 +11,7 @@ public enum ResMessage {
 	PASSWORD_ERROR(400, "Password error"),
 	UPDATE_INFO_FAILED(400, "Update info failed!"),
 	QUIZ_NOT_FOUND(404, "Quiz not found!"),
+	QUESTION_NOT_FOUND(404, "Question not found!"),
 	QUIZ_ID_MISMATCH(400, "Quiz id mismatch!"),
 	USER_NOT_FOUND(404, "User not found");
 	

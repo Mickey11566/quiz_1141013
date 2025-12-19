@@ -1,7 +1,7 @@
 package com.example.quiz_1141013.vo;
 
 public class Options {
-	
+
 	private int code;
 
 	private String optionName;
