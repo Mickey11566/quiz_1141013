@@ -94,7 +94,7 @@ public class FillinService {
 		}
 		/* 比對選項編號一樣時，選項是否一樣 */
 		for (Options op : opList) {
-			if (ans.getCode() == op.getCode() && ans.getOptionName().equals(op.getOptionName())) {
+			if (ans.getCode() == op.getCode() && !ans.getOptionName().equals(op.getOptionName())) {
 				return false;
 			}
 		}

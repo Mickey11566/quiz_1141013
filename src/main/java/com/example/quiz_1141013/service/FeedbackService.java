@@ -14,7 +14,6 @@ import com.example.quiz_1141013.dao.FillinDao;
 import com.example.quiz_1141013.dao.UserDao;
 import com.example.quiz_1141013.entity.Fillin;
 import com.example.quiz_1141013.entity.User;
-import com.example.quiz_1141013.response.BasicRes;
 import com.example.quiz_1141013.response.Feedback;
 import com.example.quiz_1141013.response.FeedbackRes;
 import com.example.quiz_1141013.vo.AnswerVo;
