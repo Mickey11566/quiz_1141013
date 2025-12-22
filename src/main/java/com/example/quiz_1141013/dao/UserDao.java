@@ -1,5 +1,7 @@
 package com.example.quiz_1141013.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,8 +19,11 @@ public interface UserDao extends JpaRepository<User, String> {
 			+ " values (?1, ?2, ?3, ?4)", nativeQuery = true)
 	public int addUser(String email, String password, String name, String phone);
 
-	@Query(value = "Select * from user where email = ?1", nativeQuery = true)
+	@Query(value = "Select * from user where email = ?", nativeQuery = true)
 	public User getUser(String email);
+
+	@Query(value = "Select * from user where email in ?", nativeQuery = true)
+	public List<User> getUsersIn(List<String> emailList);
 
 	@Transactional
 	@Modifying

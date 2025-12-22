@@ -13,6 +13,8 @@ public enum ResMessage {
 	QUIZ_NOT_FOUND(404, "Quiz not found!"),
 	QUESTION_NOT_FOUND(404, "Question not found!"),
 	QUIZ_ID_MISMATCH(400, "Quiz id mismatch!"),
+	OPTION_NAME_DISMATCH(400, "Option name dismatch"),
+	ANSWER_REQUIRED(400, "Answer required"),
 	USER_NOT_FOUND(404, "User not found");
 	
 	private int code;
