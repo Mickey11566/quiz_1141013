@@ -13,9 +13,11 @@ import com.example.quiz_1141013.constants.ResMessage;
 import com.example.quiz_1141013.constants.Type;
 import com.example.quiz_1141013.dao.FillinDao;
 import com.example.quiz_1141013.dao.QuestionDao;
+import com.example.quiz_1141013.entity.Fillin;
 import com.example.quiz_1141013.entity.Question;
 import com.example.quiz_1141013.request.FillinReq;
 import com.example.quiz_1141013.response.BasicRes;
+import com.example.quiz_1141013.response.StatisticsRes;
 import com.example.quiz_1141013.vo.AnswerVo;
 import com.example.quiz_1141013.vo.Answers;
 import com.example.quiz_1141013.vo.Options;
@@ -100,5 +102,6 @@ public class FillinService {
 		}
 		return true;
 	};
+	
 
 }
