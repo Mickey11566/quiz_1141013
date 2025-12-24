@@ -13,6 +13,7 @@ import com.example.quiz_1141013.constants.Type;
 import com.example.quiz_1141013.dao.QuestionDao;
 import com.example.quiz_1141013.dao.QuizDao;
 import com.example.quiz_1141013.entity.Question;
+import com.example.quiz_1141013.entity.Quiz;
 import com.example.quiz_1141013.request.QuizCreateReq;
 import com.example.quiz_1141013.request.QuizUpdateReq;
 import com.example.quiz_1141013.response.BasicRes;
@@ -92,7 +93,6 @@ public class QuizService {
 		}
 		return null;
 	}
-
 
 	@Transactional(rollbackOn = Exception.class)
 	public BasicRes updateQuiz(QuizUpdateReq req) throws Exception {
@@ -184,4 +184,17 @@ public class QuizService {
 		return new GetQuestionRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage(), questionVoList);
 	};
 
+	@Transactional(rollbackOn = Exception.class)
+	public BasicRes removeQuiz(List<Integer> quizId) {
+		// 執行更新，並取得實際被修改的筆數
+		int deletedCount = quizDao.deleteQuizById(quizId);
+
+		// 如果受影響的筆數大於 0，表示至少有一份問卷被成功軟刪除
+		if (deletedCount > 0) {
+			return new BasicRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
+		} else {
+			// 如果一筆都沒改到，表示傳入的 ID 在資料庫都找不到（或是已被刪除）
+			return new BasicRes(ResMessage.QUIZ_NOT_FOUND.getCode(), ResMessage.QUIZ_NOT_FOUND.getMessage());
+		}
+	}
 }

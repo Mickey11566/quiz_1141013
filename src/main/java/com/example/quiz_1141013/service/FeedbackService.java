@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,7 +88,7 @@ public class FeedbackService {
 		return feedbackList;
 	}
 
-	private StatisticsRes statistics(int quizId) throws Exception {
+	public StatisticsRes statistics(int quizId) throws Exception {
 
 //		res 包含多位使用者(email)的填答
 		List<Fillin> res = fillinDao.getByQuizId(quizId);
@@ -126,7 +127,7 @@ public class FeedbackService {
 		List<Statistics> list = new ArrayList<>();
 		map.forEach((k, v) -> {
 			List<OptionsCount> opCountList = new ArrayList<>();
-//			v 就是 Map<code-optionName, count>
+//			v 為 Map<code-optionName, count>
 			v.forEach((k1, v1) -> {
 //				array = [code, optionName]
 				String[] array = k1.split("-");
@@ -140,32 +141,123 @@ public class FeedbackService {
 		return new StatisticsRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage(), list);
 	};
 
-	private StatisticsRes statistics_test(int quizId) throws Exception {
+//	public StatisticsRes statistics_test(int quizId) throws Exception {
+//		/* res 包含了多位使用者(email)的填答 */
+//		List<Fillin> res = fillinDao.getByQuizId(quizId);
+//		/* Map<questionId, List<OptionsCount>> */
+//		Map<Integer, List<OptionsCount>> map = new HashMap<>();
+//		for (Fillin item : res) {
+//			try {
+//				/*
+//				 * 把字串 answer 轉換成物件 List<AnswerVo> 
+//				 * 這邊一個 List<AnswerVo> 只包含了一個問題的 所有編號-選項
+//				 */
+//				List<AnswerVo> voList = mapper.readValue(item.getAnswer(), new TypeReference<>() {
+//				});
+//				/* voList 轉成 List<OptionsCount> */
+//				List<OptionsCount> opCountList = CollectionUtils.isEmpty(map.get(item.getQuestionId()))
+//						? new ArrayList<>()
+//						: map.get(item.getQuestionId());
+//				voList.forEach(vo -> {
+//					/* 有選 */
+//					if (vo.isCheck()) {
+//						/*
+//						 * 第一筆資料 --> opCountList 是空的，不用 CollectionUtilsE.isEmpty() 
+//						 * 判斷是因為前面已經把其設定為 new ArrayList<>()， 要使用也可以
+//						 */
+//						if (opCountList.isEmpty()) {
+//							/* 因為是第一筆資料，所以有選的次數直接變成1 */
+//							opCountList.add(new OptionsCount(vo.getCode(), vo.getOptionName(), 1));
+//						} else {
+//							/* 遍歷並比對相同編號 */
+//							opCountList.forEach(op -> {
+//								/* 比對相同編號 --> 取出 op 中的次數 --> +1 --> set 回去 */
+//								if (op.getCode() == vo.getCode()) {
+//									op.setCount(op.getCount() + 1);
+//								}
+//							});
+//						}
+//					}
+//				});
+//				map.put(item.getQuestionId(), opCountList);
+//			} catch (Exception e) {
+//				throw e;
+//			}
+//		}
+//		/* 把 map 轉成 List<Statistics> */
+//		List<Statistics> list = new ArrayList<>();
+//		map.forEach((k, v) -> {
+//			list.add(new Statistics(k, v));
+//		});
+//		return new StatisticsRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage(), list);
+//	}
 
-//		res 包含多位使用者(email)的填答
+	public StatisticsRes statistics_test(int quizId) throws Exception {
+		/* res 包含了多位使用者(email)的填答 */
 		List<Fillin> res = fillinDao.getByQuizId(quizId);
+		/* Map<questionId, List<OptionsCount>> */
 		Map<Integer, List<OptionsCount>> map = new HashMap<>();
 		for (Fillin item : res) {
 			try {
-//				把字串 answer 轉換成 物件 List<AnswerVo>
-//				一個List<AnswerVo> 等同一個問題的所有編號-選項
+				/*
+				 * 把字串 answer 轉換成物件 List<AnswerVo> 這邊一個 List<AnswerVo> 只包含了一個問題的 所有編號-選項
+				 */
 				List<AnswerVo> voList = mapper.readValue(item.getAnswer(), new TypeReference<>() {
 				});
+				/* voList 轉成 List<OptionsCount> */
 				List<OptionsCount> opCountList = CollectionUtils.isEmpty(map.get(item.getQuestionId()))
 						? new ArrayList<>()
 						: map.get(item.getQuestionId());
-
 				voList.forEach(vo -> {
-					OptionsCount opCount = new OptionsCount(vo.getCode(), vo.getOptionName(), vo.isCheck() ? 1 : 0);
-					opCountList.add(opCount);
+					OptionsCount opCount = new OptionsCount(vo.getCode(), vo.getOptionName(), 0);
+					/* 判斷 vo 中的編號是否有存在於 opCountList 中 */
+					if (!isIncludeCode.test(vo, opCountList)) {
+						/* opCountList 不存在相同編號的 vo --> 新增 */
+						opCountList.add(opCount);
+					} else {
+						opCount = opCountList.stream()
+								/* 使用 filter 篩選出 code 相同的物件 */
+								.filter(opItem -> opItem.getCode() == vo.getCode())
+								/* 取出第一個符合條件的 */
+								.findFirst()
+								/* 如果沒找到，則回傳新建立的物件(正常應該都會有，因為上面的 if 已經先判斷過了) */
+								.orElse(new OptionsCount());
+					}
+					/* 有選 */
+					if (vo.isCheck()) {
+						/* 遍歷並比對相同編號 */
+						opCountList.forEach(op -> {
+							/* 比對相同編號 --> 取出 op 中的次數 --> +1 --> set 回去 */
+							if (op.getCode() == vo.getCode()) {
+								op.setCount(op.getCount() + 1);
+							}
+						});
+					}
 				});
 				map.put(item.getQuestionId(), opCountList);
 			} catch (Exception e) {
 				throw e;
 			}
 		}
-
-		return null;
+		/* 把 map 轉成 List<Statistics> */
+		List<Statistics> list = new ArrayList<>();
+		map.forEach((k, v) -> {
+			list.add(new Statistics(k, v));
+		});
+		return new StatisticsRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage(), list);
 	}
+
+	private BiPredicate<AnswerVo, List<OptionsCount>> isIncludeCode = (vo, opCountList) -> {
+		if (vo == null || CollectionUtils.isEmpty(opCountList)) {
+			return false;
+		}
+		/* 比對選項編號一樣時，選項是否一樣 */
+		for (OptionsCount opCount : opCountList) {
+			if (vo.getCode() == opCount.getCode()) {
+				return true;
+			}
+		}
+		return false;
+	};
 
 }

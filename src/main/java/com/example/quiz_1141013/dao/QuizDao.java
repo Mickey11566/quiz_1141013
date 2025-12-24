@@ -31,10 +31,18 @@ public interface QuizDao extends JpaRepository<Quiz, Integer> {
 	@Query(value = "select max(id) from quiz", nativeQuery = true)
 	public int getMaxId();
 
-	@Query(value = "select * from quiz", nativeQuery = true)
+	@Query(value = "select * from quiz where is_deleted = 0", nativeQuery = true)
 	public List<Quiz> getAll();
 
-	@Query(value = "select * from quiz where title like %?1% and start_date >= ?2 and end_date <= ?3", nativeQuery = true)
+	@Query(value = "select * from quiz where id IN ? AND is_deleted = 0", nativeQuery = true)
+	public List<Quiz> getQuizById(List<Integer> quizId);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE quiz SET is_deleted = 1 WHERE id IN ?", nativeQuery = true)
+	public int deleteQuizById(List<Integer> quizId);
+
+	@Query(value = "select * from quiz where title like %?1% and start_date >= ?2 and end_date <= ?3 and where is_deleted = 0", nativeQuery = true)
 	public List<Quiz> getAll(String keyword, LocalDate startDate, LocalDate endDate);
 
 }

@@ -2,10 +2,13 @@ package com.example.quiz_1141013.entity;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.Where;
+
 import jakarta.persistence.*;
 
 @Table(name = "quiz")
 @Entity
+@Where(clause = "is_deleted = 0")
 public class Quiz {
 
 	@Column(name = "id")
@@ -24,6 +27,9 @@ public class Quiz {
 	@Column(name = "endDate")
 	private LocalDate endDate;
 
+	@Column(name = "is_deleted")
+	private int deleted;
+
 //	屬性變數名稱即使資料型態為 boolean，也別用 is 開頭
 //	因為會影響getter 方法命名方式
 //	published 資料型態為 boolean，所以 getter 的方法名稱預設為 isPublished
@@ -31,7 +37,7 @@ public class Quiz {
 //	則IDE自動產生的正確getter方法名稱應該為 isIsPublished
 //	但IDE產生的為 isPublished ，所以會影響資料庫中該欄位的值無法被傳遞到變數容器中
 //	會導致該變數永遠為預設值 false(0)
-	
+
 	@Column(name = "published")
 	private boolean published;
 
@@ -81,6 +87,14 @@ public class Quiz {
 
 	public void setPublished(boolean published) {
 		this.published = published;
+	}
+
+	public int getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.example.quiz_1141013.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.quiz_1141013.request.QuizCreateReq;
 import com.example.quiz_1141013.request.QuizUpdateReq;
 import com.example.quiz_1141013.response.BasicRes;
-import com.example.quiz_1141013.response.GetListRes;
 import com.example.quiz_1141013.response.GetQuestionRes;
 import com.example.quiz_1141013.service.QuizService;
 
@@ -47,13 +47,19 @@ public class QuizController {
 
 //	http://localhost:8080/quiz/getquestion?quizId=3
 	@GetMapping("quiz/getquestion")
-	public GetQuestionRes getQuestionByQuizId(@RequestParam("quizId") int quizId) throws Exception {
+	public GetQuestionRes getQuestionByQuizId(
+			@RequestParam(value = "quizId", defaultValue = "", required = true) int quizId) throws Exception {
 		return quizService.getQuestionByQuizId(quizId);
 	}
 
 	@PostMapping("quiz/update")
 	public BasicRes updateQuiz(@RequestBody QuizUpdateReq req) throws Exception {
 		return quizService.updateQuiz(req);
+	}
+
+	@PostMapping("quiz/delete")
+	public BasicRes deleteQuizzes(@RequestBody List<Integer> quizId) {
+		return quizService.removeQuiz(quizId);
 	}
 
 }
