@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.quiz_1141013.entity.RespondentDTO;
 import com.example.quiz_1141013.request.QuizCreateReq;
 import com.example.quiz_1141013.request.QuizUpdateReq;
 import com.example.quiz_1141013.response.BasicRes;
 import com.example.quiz_1141013.response.GetQuestionRes;
+import com.example.quiz_1141013.response.RespondentRes;
 import com.example.quiz_1141013.service.QuizService;
 
 import jakarta.validation.Valid;
@@ -60,6 +62,11 @@ public class QuizController {
 	@PostMapping("quiz/delete")
 	public BasicRes deleteQuizzes(@RequestBody List<Integer> quizId) {
 		return quizService.removeQuiz(quizId);
+	}
+
+	@PostMapping("/quiz/respondents")
+	public RespondentRes getRespondents(@RequestBody int quizId) {
+		return quizService.getRespondentList(quizId);
 	}
 
 }

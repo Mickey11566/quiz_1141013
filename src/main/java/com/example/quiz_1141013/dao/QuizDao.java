@@ -8,8 +8,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.example.quiz_1141013.entity.Fillin;
 import com.example.quiz_1141013.entity.Quiz;
+import com.example.quiz_1141013.entity.RespondentDTO;
+import com.example.quiz_1141013.entity.UserAnswerDTO;
 
 @Repository
 public interface QuizDao extends JpaRepository<Quiz, Integer> {
@@ -44,5 +48,10 @@ public interface QuizDao extends JpaRepository<Quiz, Integer> {
 
 	@Query(value = "select * from quiz where title like %?1% and start_date >= ?2 and end_date <= ?3 and where is_deleted = 0", nativeQuery = true)
 	public List<Quiz> getAll(String keyword, LocalDate startDate, LocalDate endDate);
+
+	@Query("SELECT DISTINCT new com.example.quiz_1141013.entity.RespondentDTO(f.email, f.fillinDate) "
+			+ "FROM Fillin f " + "WHERE f.quizId = ?1 " + "ORDER BY f.fillinDate DESC")
+	public List<RespondentDTO> findDistinctRespondents(int quizId);
+
 
 }

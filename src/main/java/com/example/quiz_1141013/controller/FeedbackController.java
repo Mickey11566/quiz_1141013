@@ -18,7 +18,6 @@ public class FeedbackController {
 
 	@GetMapping("quiz/stat")
 	public StatisticsRes statistics(@RequestParam("quizId") int quizId) throws Exception {
-		return feedbackService.statistics_test(quizId);
-
+		return feedbackService.statistics(quizId);
 	}
 }

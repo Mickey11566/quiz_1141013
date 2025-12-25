@@ -13,12 +13,14 @@ import com.example.quiz_1141013.constants.Type;
 import com.example.quiz_1141013.dao.QuestionDao;
 import com.example.quiz_1141013.dao.QuizDao;
 import com.example.quiz_1141013.entity.Question;
-import com.example.quiz_1141013.entity.Quiz;
+import com.example.quiz_1141013.entity.RespondentDTO;
+import com.example.quiz_1141013.entity.UserAnswerDTO;
 import com.example.quiz_1141013.request.QuizCreateReq;
 import com.example.quiz_1141013.request.QuizUpdateReq;
 import com.example.quiz_1141013.response.BasicRes;
 import com.example.quiz_1141013.response.GetListRes;
 import com.example.quiz_1141013.response.GetQuestionRes;
+import com.example.quiz_1141013.response.RespondentRes;
 import com.example.quiz_1141013.vo.Options;
 import com.example.quiz_1141013.vo.QuestionVo;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -163,6 +165,13 @@ public class QuizService {
 				quizDao.getAll(keyword, startDate, endDate));
 	};
 
+	public BasicRes getQuizById(int quizId) {
+		if (quizId < 1) {
+			return new BasicRes(ResMessage.QUIZ_NOT_FOUND.getCode(), ResMessage.QUIZ_NOT_FOUND.getMessage());
+		}
+		return new BasicRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage());
+	}
+
 	public GetQuestionRes getQuestionByQuizId(int quizId) throws Exception {
 		List<Question> list = questionDao.getOptionByQuizId(quizId);
 		List<QuestionVo> questionVoList = new ArrayList<>();
@@ -197,4 +206,18 @@ public class QuizService {
 			return new BasicRes(ResMessage.QUIZ_NOT_FOUND.getCode(), ResMessage.QUIZ_NOT_FOUND.getMessage());
 		}
 	}
+
+	public RespondentRes getRespondentList(int quizId) {
+		// 執行查詢
+		List<RespondentDTO> list = quizDao.findDistinctRespondents(quizId);
+
+		// 判斷名單是否為空
+		if (list != null && !list.isEmpty()) {
+			return new RespondentRes(ResMessage.SUCCESS.getCode(), ResMessage.SUCCESS.getMessage(), list);
+		} else {
+			// 如果沒人填寫，回傳「尚未有填寫紀錄」或「問卷不存在」
+			return new RespondentRes(ResMessage.QUIZ_NOT_FOUND.getCode(), ResMessage.QUIZ_NOT_FOUND.getMessage());
+		}
+	}
+
 }
