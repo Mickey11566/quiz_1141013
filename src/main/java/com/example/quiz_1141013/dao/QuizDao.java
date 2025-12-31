@@ -46,7 +46,7 @@ public interface QuizDao extends JpaRepository<Quiz, Integer> {
 	@Query(value = "UPDATE quiz SET is_deleted = 1 WHERE id IN ?", nativeQuery = true)
 	public int deleteQuizById(List<Integer> quizId);
 
-	@Query(value = "select * from quiz where title like %?1% and start_date >= ?2 and end_date <= ?3 and where is_deleted = 0", nativeQuery = true)
+	@Query(value = "select * from quiz where title like %?1% and start_date >= ?2 and end_date <= ?3 and is_deleted = 0", nativeQuery = true)
 	public List<Quiz> getAll(String keyword, LocalDate startDate, LocalDate endDate);
 
 	@Query("SELECT DISTINCT new com.example.quiz_1141013.entity.RespondentDTO(f.email, f.fillinDate) "

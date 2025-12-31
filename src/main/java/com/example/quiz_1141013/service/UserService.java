@@ -1,6 +1,10 @@
 package com.example.quiz_1141013.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +15,7 @@ import com.example.quiz_1141013.request.UserAddReq;
 import com.example.quiz_1141013.request.UserLoginReq;
 import com.example.quiz_1141013.response.BasicRes;
 
+@EnableScheduling
 @Service
 public class UserService {
 
@@ -54,6 +59,12 @@ public class UserService {
 		return new BasicRes(ResMessage.SUCCESS.getCode(), //
 				ResMessage.SUCCESS.getMessage());
 	}
+	
+//	單位:           秒 分 時 日 月 週
+//	@Scheduled(cron = "* * * * * *")
+//	public void test() {
+//		System.out.println(LocalDateTime.now());	
+//	}
 	
 
 	public BasicRes updateInfo(String email, String oldPwd, String newPwd, String oldName, String newName,String oldPhone, String newPhone) {

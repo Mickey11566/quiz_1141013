@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import com.example.quiz_1141013.dao.FillinDao;
 import com.example.quiz_1141013.dao.QuestionDao;
 import com.example.quiz_1141013.dao.UserDao;
 import com.example.quiz_1141013.entity.Fillin;
-import com.example.quiz_1141013.entity.Question;
 import com.example.quiz_1141013.entity.User;
 import com.example.quiz_1141013.response.Feedback;
 import com.example.quiz_1141013.response.FeedbackRes;
