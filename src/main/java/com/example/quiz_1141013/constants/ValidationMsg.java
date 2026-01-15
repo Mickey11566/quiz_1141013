@@ -4,6 +4,9 @@ public class ValidationMsg {
 
 //	加上 final 是因為使用在@Validation 中的 message 的限制
 //	加上 static 讓 ACCOUNT_ERROR可以直接透過 ValidationMsg class呼叫
+
+//	加上 final 是因為使用在@Validation 中的 message 的限制
+//	加上 static 讓 ACCOUNT_ERROR可以直接透過 ValidationMsg class呼叫
 	public static final String TITLE_ERROR = "Title error!";
 	public static final String DESCRIPTION_ERROR = "Description error!";
 	public static final String START_DATE_ERROR = "Start date error!";

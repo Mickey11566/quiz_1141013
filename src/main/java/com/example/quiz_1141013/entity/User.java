@@ -11,6 +11,8 @@ import jakarta.validation.constraints.Pattern;
 @Entity
 public class User {
 
+	
+	
 	@Column(name = "email")
 	@Id
 	private String email;

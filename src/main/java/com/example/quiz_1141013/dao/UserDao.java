@@ -13,6 +13,8 @@ import com.example.quiz_1141013.entity.User;
 @Repository
 public interface UserDao extends JpaRepository<User, String> {
 
+	
+//	新增用戶
 	@Transactional
 	@Modifying
 	@Query(value = "insert into user(email, password, name, phone) "//
